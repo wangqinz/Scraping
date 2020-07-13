@@ -1,0 +1,71 @@
+---
+title: "clawer"
+author: "Qinzhe Wang"
+date: "7/13/2020"
+output: html_document
+---
+
+```{r, message=F, warning=F}
+library(tidyverse)
+library(xml2)
+library(rvest)
+library(stringr)
+library(RCurl)
+library(xml2)
+```
+
+
+```{r,  add header}
+myheader<-c(
+  "User-Agent"="Mozilla/5.0 (Linux; U; Android 1.0; en-us; dream) AppleWebKit/525.10 (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2 ",
+  "Accept-Language"="en-us",
+  "Connection"="keep-alive",
+  "Accept-Charset"="GB2312,utf-8;q=0.7,*;q=0.7")
+```
+
+
+```{r, Function scatch}
+table0<-data.frame("Title"=1,"Link"=1)
+
+scatch <-function(){
+  for (i in 1:10){
+  url_i <- paste0("https://search.sina.com.cn/?q=%e7%be%8e%e5%9b%bd%e7%96%ab%e6%83%85&c=news&from=channel&col=&range=all&source=&country=&size=10&stime=&etime=&time=&dpc=0&a=&ps=0&pf=0&page=",i)
+  
+    webpage <- read_html(url_i,header=myheader,encoding="utf-8")
+    
+    title <- webpage%>%
+      html_nodes('body')%>%
+      html_nodes('div h2 a')%>%
+      html_text()
+    
+    link <- webpage%>%
+      html_nodes('body')%>%
+      html_nodes('div h2 a')%>%
+      html_attr("href")
+    
+    table0<- rbind(table0,data.frame("Title"=title,"Link"=link))
+
+  }
+  table0 <- table0[-1,]
+  rownames(table0)<- as.numeric(rownames(table0))-1
+  write.table(table0,"COVID19_news.csv",row.names=FALSE,col.names = FALSE)
+  write.table(table0,"COVID19_news.txt",row.names=FALSE,col.names = FALSE)
+} 
+
+```
+
+
+
+````{r, run}
+scatch()
+```
+
+
+
+
+
+
+
+
+
+
