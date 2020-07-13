@@ -1,0 +1,86 @@
+---
+title: "clawer"
+author: "Qinzhe Wang"
+date: "7/13/2020"
+output: html_document
+---
+
+```{r,results=F}
+library(tidyverse)
+library(xml2)
+library(rvest)
+library(stringr)
+library(RCurl)
+library(xml2)
+```
+
+
+```{r}
+myheader<-c(
+  "User-Agent"="Mozilla/5.0 (Linux; U; Android 1.0; en-us; dream) AppleWebKit/525.10 (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2 ",
+  "Accept-Language"="en-us",
+  "Connection"="keep-alive",
+  "Accept-Charset"="GB2312,utf-8;q=0.7,*;q=0.7")
+
+url_list <- list()
+
+for (i in 1:10){
+  url_i <- paste0("https://search.sina.com.cn/?q=%e7%be%8e%e5%9b%bd%e7%96%ab%e6%83%85&c=news&from=channel&col=&range=all&source=&country=&size=10&stime=&etime=&time=&dpc=0&a=&ps=0&pf=0&page=",i)
+  url_list <- append(url_list,url_i)
+}
+
+
+```
+
+
+```{r}
+
+
+url <- "https://search.sina.com.cn/?q=%e7%be%8e%e5%9b%bd%e7%96%ab%e6%83%85&c=news&from=channel&col=&range=all&source=&country=&size=10&stime=&etime=&time=&dpc=0&a=&ps=0&pf=0&page=1"
+  
+webpage <- read_html(url,header=myheader,encoding="utf-8")
+
+title <- webpage%>%
+  html_nodes('body')%>%
+  html_nodes('div h2 a')%>%
+  html_text()
+
+link <- webpage%>%
+  html_nodes('body')%>%
+  html_nodes('div h2 a')%>%
+  html_attr("href")
+
+
+```
+
+
+
+````{r}
+list1 <-list()
+
+for (i in 1:length(title)){
+  list1 <- append(list1,paste(title[i],link[i],sep= " " ))
+}
+
+
+```
+
+
+
+
+
+
+```{r}
+a<- "abc"
+b<-"def"
+
+paste(a,b,sep="")
+```
+
+
+```{r}
+
+?paste
+```
+
+
